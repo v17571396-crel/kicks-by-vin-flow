@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Product } from '@/data/mockProducts';
+import { Product, getProductImage } from '@/data/mockProducts';
 
 interface CheckoutModalProps {
   product: Product;
@@ -49,6 +48,8 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
     onClose();
   };
 
+  const imageUrl = getProductImage(product);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md bg-background">
@@ -58,7 +59,7 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
           </DialogTitle>
         </DialogHeader>
         <div className="flex items-center gap-3 p-3 bg-card rounded-lg">
-          <img src={product.images[0]} alt={product.title} className="w-16 h-16 rounded-md object-cover" />
+          <img src={imageUrl} alt={product.title} className="w-16 h-16 rounded-md object-cover" />
           <div>
             <p className="font-display font-bold text-lg">KES {product.price.toLocaleString()}</p>
             <p className="text-sm text-muted-foreground font-body">{product.size}</p>

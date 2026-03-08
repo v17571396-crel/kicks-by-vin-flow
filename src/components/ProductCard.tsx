@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Product } from '@/data/mockProducts';
-import { Badge } from '@/components/ui/badge';
+import { Product, getProductImage } from '@/data/mockProducts';
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +14,8 @@ const conditionColor = (condition: string) => {
 };
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const imageUrl = getProductImage(product);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -24,7 +25,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Link to={`/product/${product.id}`} className="group block">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-card">
           <img
-            src={product.images[0]}
+            src={imageUrl}
             alt={product.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
