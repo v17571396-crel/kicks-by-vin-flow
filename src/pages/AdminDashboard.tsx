@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import ProductFormModal from '@/components/admin/ProductFormModal';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import OrdersSection from '@/components/admin/OrdersSection';
+import { useOrders } from '@/hooks/useOrders';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -131,6 +132,7 @@ const AdminDashboard = () => {
   const { user, isAdmin, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('products');
   const { data: products = [], isLoading } = useProducts();
+  const { data: orders = [] } = useOrders();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
@@ -241,6 +243,11 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="orders" className="font-display text-sm gap-1.5">
               <ShoppingBag size={14} /> Orders
+              {orders.filter(o => o.status === 'pending').length > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                  {orders.filter(o => o.status === 'pending').length}
+                </span>
+              )}
             </TabsTrigger>
           </TabsList>
 
