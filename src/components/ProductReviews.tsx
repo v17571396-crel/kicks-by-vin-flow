@@ -31,7 +31,7 @@ const StarRating = ({ rating, onRate, interactive = false }: { rating: number; o
   </div>
 );
 
-const ProductReviews = ({ productId }: ProductReviewsProps) => {
+const ProductReviews = ({ productId, productTitle }: ProductReviewsProps) => {
   const { user } = useAuth();
   const { reviews, isLoading, addReview, deleteReview, averageRating, userReview } = useReviews(productId);
   const [rating, setRating] = useState(0);
