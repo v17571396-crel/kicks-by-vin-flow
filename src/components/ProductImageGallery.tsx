@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { getProductImage } from '@/data/mockProducts';
@@ -16,6 +16,58 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const lastDistance = useRef(0);
+  const lastCenter = useRef({ x: 0, y: 0 });
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const resetZoom = () => { setScale(1); setTranslate({ x: 0, y: 0 }); };
+
+  useEffect(() => { if (!lightboxOpen) resetZoom(); }, [lightboxOpen]);
+  useEffect(() => { resetZoom(); }, [selectedIndex]);
+
+  const getDistance = (t1: React.Touch, t2: React.Touch) =>
+    Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      lastDistance.current = getDistance(e.touches[0], e.touches[1]);
+      lastCenter.current = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getDistance(e.touches[0], e.touches[1]);
+      const newScale = Math.min(4, Math.max(1, scale * (dist / lastDistance.current)));
+      lastDistance.current = dist;
+
+      const center = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+      if (newScale > 1) {
+        setTranslate(prev => ({
+          x: prev.x + (center.x - lastCenter.current.x),
+          y: prev.y + (center.y - lastCenter.current.y),
+        }));
+      } else {
+        setTranslate({ x: 0, y: 0 });
+      }
+      lastCenter.current = center;
+      setScale(newScale);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length < 2 && scale <= 1) resetZoom();
+  };
 
   const goTo = useCallback((index: number, dir?: number) => {
     const next = (index + images.length) % images.length;
@@ -153,22 +205,34 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
             <AnimatePresence mode="wait" custom={direction}>
               <motion.img
                 key={selectedIndex}
+                ref={imgRef}
                 src={images[selectedIndex]}
                 alt={`${product.title} — photo ${selectedIndex + 1}`}
-                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg cursor-grab active:cursor-grabbing select-none"
+                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg select-none"
+                style={{
+                  transform: `scale(${scale}) translate(${translate.x / scale}px, ${translate.y / scale}px)`,
+                  touchAction: 'none',
+                  cursor: scale > 1 ? 'move' : (images.length > 1 ? 'grab' : 'default'),
+                }}
                 custom={direction}
                 initial={{ opacity: 0, scale: 0.9, x: direction * 100 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.9, x: -direction * 100 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
-                onClick={(e) => e.stopPropagation()}
-                drag={images.length > 1 ? 'x' : false}
+                onClick={(e) => { e.stopPropagation(); if (scale > 1) resetZoom(); }}
+                onDoubleClick={(e) => { e.stopPropagation(); scale > 1 ? resetZoom() : setScale(2.5); }}
+                drag={scale <= 1 && images.length > 1 ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.3}
                 onDragEnd={(_, info) => {
-                  if (info.offset.x < -SWIPE_THRESHOLD) goTo(selectedIndex + 1, 1);
-                  else if (info.offset.x > SWIPE_THRESHOLD) goTo(selectedIndex - 1, -1);
+                  if (scale <= 1) {
+                    if (info.offset.x < -SWIPE_THRESHOLD) goTo(selectedIndex + 1, 1);
+                    else if (info.offset.x > SWIPE_THRESHOLD) goTo(selectedIndex - 1, -1);
+                  }
                 }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
             </AnimatePresence>
 
