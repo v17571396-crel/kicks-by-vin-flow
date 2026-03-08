@@ -250,10 +250,10 @@ const AdminDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
-          </TabsList>
             <TabsTrigger value="analytics" className="font-display text-sm gap-1.5">
               <BarChart3 size={14} /> Analytics
             </TabsTrigger>
+          </TabsList>
 
           <TabsContent value="products">
             <div className="bg-card rounded-lg overflow-hidden">
