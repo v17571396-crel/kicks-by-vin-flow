@@ -19,6 +19,12 @@ const Index = () => {
 
   const { data: products = [], isLoading } = useProducts();
 
+  // Extract unique sizes from actual products
+  const availableSizes = useMemo(() => {
+    const sizes = new Set(products.map((p) => p.size));
+    return Array.from(sizes);
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -29,7 +35,7 @@ const Index = () => {
       );
     }
     if (sizeFilter !== 'all') {
-      result = result.filter((p) => p.size.includes(sizeFilter));
+      result = result.filter((p) => p.size === sizeFilter);
     }
     if (conditionFilter !== 'all') {
       result = result.filter((p) => p.condition.includes(conditionFilter));
@@ -125,6 +131,7 @@ const Index = () => {
           onConditionChange={setConditionFilter}
           sortBy={sortBy}
           onSortChange={setSortBy}
+          availableSizes={availableSizes}
         />
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-8">

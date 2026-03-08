@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -12,6 +12,7 @@ interface ProductFiltersProps {
   onConditionChange: (condition: string) => void;
   sortBy: string;
   onSortChange: (sort: string) => void;
+  availableSizes?: string[];
 }
 
 const ProductFilters = ({
@@ -19,8 +20,16 @@ const ProductFilters = ({
   sizeFilter, onSizeChange,
   conditionFilter, onConditionChange,
   sortBy, onSortChange,
+  availableSizes = [],
 }: ProductFiltersProps) => {
   const [showFilters, setShowFilters] = useState(false);
+
+  // Sort sizes naturally (UK 6 before UK 10)
+  const sortedSizes = [...availableSizes].sort((a, b) => {
+    const numA = parseFloat(a.replace(/[^\d.]/g, ''));
+    const numB = parseFloat(b.replace(/[^\d.]/g, ''));
+    return numA - numB;
+  });
 
   return (
     <div className="space-y-4">
@@ -49,10 +58,9 @@ const ProductFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Sizes</SelectItem>
-            <SelectItem value="UK 7">UK 7 / EU 41</SelectItem>
-            <SelectItem value="UK 8">UK 8 / EU 42</SelectItem>
-            <SelectItem value="UK 9">UK 9 / EU 43</SelectItem>
-            <SelectItem value="UK 10">UK 10 / EU 44</SelectItem>
+            {sortedSizes.map((size) => (
+              <SelectItem key={size} value={size}>{size}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
