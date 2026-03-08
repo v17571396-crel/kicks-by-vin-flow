@@ -34,16 +34,21 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
     <div className="space-y-3">
       {/* Main image */}
       <div className="relative aspect-square rounded-xl overflow-hidden bg-card group">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.img
             key={selectedIndex}
             src={images[selectedIndex]}
             alt={`${product.title} — photo ${selectedIndex + 1}`}
-            className="w-full h-full object-cover"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            className="w-full h-full object-cover cursor-grab active:cursor-grabbing"
+            custom={direction}
+            initial={{ opacity: 0, x: direction * 80 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -direction * 80 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            drag={images.length > 1 ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.3}
+            onDragEnd={handleDragEnd}
           />
         </AnimatePresence>
 
