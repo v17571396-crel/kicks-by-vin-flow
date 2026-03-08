@@ -10,6 +10,7 @@ import { useProduct } from '@/hooks/useProducts';
 import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
 import FavoriteButton from '@/components/FavoriteButton';
+import SEO from '@/components/SEO';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -49,6 +50,28 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={product.title}
+        description={`${product.title} — ${product.condition}, Size ${product.size}. KES ${product.price.toLocaleString()}. Buy via M-Pesa on KicksbyVin.`}
+        path={`/product/${product.id}`}
+        type="product"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.title,
+          description: product.description,
+          image: imageUrl,
+          offers: {
+            '@type': 'Offer',
+            price: product.price,
+            priceCurrency: 'KES',
+            availability: product.available
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+            itemCondition: 'https://schema.org/UsedCondition',
+          },
+        }}
+      />
       <Navbar />
 
       <div className="container mx-auto px-4 py-6">

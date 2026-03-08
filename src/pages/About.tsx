@@ -3,6 +3,7 @@ import { MapPin, Recycle, Shield, Heart, Star, Quote } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import SEO from '@/components/SEO';
 
 const values = [
   {
@@ -39,6 +40,18 @@ const fadeUp = {
 const About = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="About"
+        description="The story behind KicksbyVin — Nairobi's trusted thrift shoe plug. Sustainable, quality sneakers at fair prices."
+        path="/about"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          name: 'About KicksbyVin',
+          description: 'The story behind KicksbyVin — Nairobi\'s trusted thrift shoe plug.',
+          url: 'https://kicksbyvin.lovable.app/about',
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

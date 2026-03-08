@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import ProductFilters from '@/components/ProductFilters';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import SEO from '@/components/SEO';
 import { useProducts } from '@/hooks/useProducts';
 import heroImage from '@/assets/hero-shoes.jpg';
 
@@ -40,6 +41,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Store',
+          name: 'KicksbyVin',
+          description: 'Nairobi\'s trusted thrift shoe plug. Quality second-hand sneakers, inspected & cleaned.',
+          url: 'https://kicksbyvin.lovable.app',
+          priceRange: 'KES 2000 - KES 10000',
+          address: { '@type': 'PostalAddress', addressLocality: 'Nairobi', addressCountry: 'KE' },
+          paymentAccepted: 'M-Pesa',
+        }}
+      />
       <Navbar />
 
       {/* Hero */}
