@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product, getProductImage } from '@/data/mockProducts';
 import FavoriteButton from '@/components/FavoriteButton';
+import { useAllReviewStats } from '@/hooks/useReviewStats';
 
 interface ProductCardProps {
   product: Product;
