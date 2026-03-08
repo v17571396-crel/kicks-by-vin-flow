@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { GA_MEASUREMENT_ID } from "@/lib/gtag";
 
 declare global {
   interface Window {
     gtag: (...args: any[]) => void;
   }
 }
-
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
 
 const GoogleAnalytics = () => {
   const location = useLocation();
