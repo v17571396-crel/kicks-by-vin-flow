@@ -1,12 +1,121 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import ProductCard from '@/components/ProductCard';
+import ProductFilters from '@/components/ProductFilters';
+import WhatsAppButton from '@/components/WhatsAppButton';
+import { mockProducts } from '@/data/mockProducts';
+import heroImage from '@/assets/hero-shoes.jpg';
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sizeFilter, setSizeFilter] = useState('all');
+  const [conditionFilter, setConditionFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+
+  const filteredProducts = useMemo(() => {
+    let products = [...mockProducts];
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      products = products.filter(
+        (p) => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
+      );
+    }
+    if (sizeFilter !== 'all') {
+      products = products.filter((p) => p.size.includes(sizeFilter));
+    }
+    if (conditionFilter !== 'all') {
+      products = products.filter((p) => p.condition.includes(conditionFilter));
+    }
+    if (sortBy === 'price-low') products.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-high') products.sort((a, b) => b.price - a.price);
+
+    return products;
+  }, [searchQuery, sizeFilter, conditionFilter, sortBy]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+
+      {/* Hero */}
+      <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
+        <img
+          src={heroImage}
+          alt="KicksbyVin thrift shoe collection"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-transparent" />
+        <div className="relative h-full flex items-end pb-12 md:pb-16">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h1 className="font-display text-4xl md:text-6xl font-bold text-sand leading-tight">
+                Fresh Kicks.<br />
+                <span className="text-terracotta-light">Fair Prices.</span>
+              </h1>
+              <p className="mt-4 font-body text-base md:text-lg text-sand/80 max-w-md">
+                Nairobi's trusted thrift shoe plug. Quality second-hand sneakers, inspected & cleaned. Pay via M-Pesa.
+              </p>
+              <a
+                href="#shop"
+                className="mt-6 inline-flex items-center gap-2 bg-terracotta text-accent-foreground px-6 py-3 rounded-full font-display font-semibold text-sm hover:bg-terracotta-light transition-colors"
+              >
+                Shop Now <ArrowRight size={16} />
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Shop Section */}
+      <section id="shop" className="container mx-auto px-4 py-12">
+        <div className="mb-8">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+            Available Kicks
+          </h2>
+          <p className="font-body text-muted-foreground mt-1">
+            {filteredProducts.length} pair{filteredProducts.length !== 1 && 's'} in stock
+          </p>
+        </div>
+
+        <ProductFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sizeFilter={sizeFilter}
+          onSizeChange={setSizeFilter}
+          conditionFilter={conditionFilter}
+          onConditionChange={setConditionFilter}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-8">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-16">
+            <p className="font-display text-lg text-muted-foreground">No kicks match your filters.</p>
+            <button
+              onClick={() => { setSearchQuery(''); setSizeFilter('all'); setConditionFilter('all'); }}
+              className="mt-3 text-terracotta font-body text-sm hover:underline"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
+      </section>
+
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
