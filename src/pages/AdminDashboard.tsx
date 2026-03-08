@@ -254,6 +254,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="analytics" className="font-display text-sm gap-1.5">
               <BarChart3 size={14} /> Analytics
             </TabsTrigger>
+            <TabsTrigger value="reviews" className="font-display text-sm gap-1.5">
+              <MessageSquare size={14} /> Reviews
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="products">
