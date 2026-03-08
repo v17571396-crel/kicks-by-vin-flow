@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product, getProductImage } from '@/data/mockProducts';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface ProductCardProps {
   product: Product;
