@@ -62,6 +62,17 @@ serve(async (req) => {
   }
 
   try {
+    // Validate required secrets
+    const requiredSecrets = ["MPESA_CONSUMER_KEY", "MPESA_CONSUMER_SECRET", "MPESA_SHORTCODE", "MPESA_PASSKEY"];
+    const missing = requiredSecrets.filter(s => !Deno.env.get(s));
+    if (missing.length > 0) {
+      console.error("Missing M-Pesa secrets:", missing);
+      return new Response(
+        JSON.stringify({ error: "M-Pesa payment is not configured yet. Missing credentials." }),
+        { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { phone, amount, productId, customerName, deliveryArea }: StkPushRequest =
       await req.json();
 
