@@ -11,6 +11,8 @@ import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
 import FavoriteButton from '@/components/FavoriteButton';
 import SEO from '@/components/SEO';
+import ProductReviews from '@/components/ProductReviews';
+import { useReviews } from '@/hooks/useReviews';
 
 const ProductDetail = () => {
   const { id } = useParams();
