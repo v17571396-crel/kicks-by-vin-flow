@@ -110,6 +110,11 @@ export default function ProductFormModal({ open, onOpenChange, product, onSubmit
             </div>
           </div>
 
+          <div className="space-y-2">
+            <Label className="font-body text-sm">Images</Label>
+            <ImageUploader images={(form.images as string[]) || []} onChange={(imgs) => update('images', imgs)} />
+          </div>
+
           <div className="flex items-center gap-3">
             <Switch checked={form.available ?? true} onCheckedChange={(v) => update('available', v)} />
             <Label className="font-body text-sm">Available for sale</Label>
