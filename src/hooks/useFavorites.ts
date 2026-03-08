@@ -39,6 +39,7 @@ export function useFavorites() {
           .from('favorites')
           .insert({ user_id: user.id, product_id: productId });
         if (error) throw error;
+        trackEvent('add_to_wishlist', { item_id: productId });
         return { productId, action: 'added' as const };
       }
     },

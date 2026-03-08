@@ -60,6 +60,12 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
       if (error) throw error;
 
       if (data?.success) {
+        trackEvent('purchase', {
+          currency: 'KES',
+          value: product.price,
+          transaction_id: data.checkoutRequestId || product.id,
+          items: [{ item_id: product.id, item_name: product.title, price: product.price }],
+        });
         toast.success('M-Pesa STK Push sent! Check your phone to complete payment.', {
           description: `KES ${product.price.toLocaleString()} for ${product.title}`,
           duration: 10000,
