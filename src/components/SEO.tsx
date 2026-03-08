@@ -6,6 +6,7 @@ interface SEOProps {
   path?: string;
   type?: string;
   jsonLd?: Record<string, unknown>;
+  extraJsonLd?: Record<string, unknown>[];
 }
 
 const SITE_NAME = 'KicksbyVin';
