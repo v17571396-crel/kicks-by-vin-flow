@@ -41,14 +41,31 @@ const ProductReviews = ({ productId, productTitle }: ProductReviewsProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) return;
+
+    // Open WhatsApp window synchronously (before async) to avoid popup blocker
+    const reviewerName = name || 'Anonymous';
+    const stars = '⭐'.repeat(rating);
+    const msg = `📝 New Review — KicksbyVin\n\n` +
+      `👟 ${productTitle}\n` +
+      `${stars} (${rating}/5)\n` +
+      `👤 ${reviewerName}\n` +
+      `💬 ${comment || '(no comment)'}\n\n` +
+      `Check the admin dashboard for details.`;
+    const whatsappUrl = `https://wa.me/254111235578?text=${encodeURIComponent(msg)}`;
+    const whatsappWindow = window.open(whatsappUrl, '_blank');
+
     addReview.mutate(
-      { rating, comment, reviewerName: name || 'Anonymous', productTitle },
+      { rating, comment, reviewerName, productTitle },
       {
         onSuccess: () => {
           trackEvent('submit_review', { item_id: productId, rating });
           setRating(0);
           setComment('');
           setName('');
+        },
+        onError: () => {
+          // Close the WhatsApp window if the review failed to save
+          whatsappWindow?.close();
         },
       },
     );
