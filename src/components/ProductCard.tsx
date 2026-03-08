@@ -43,6 +43,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
               {product.condition}
             </span>
           </div>
+          <div className="absolute top-3 right-3">
+            <FavoriteButton productId={product.id} size={18} />
+          </div>
         </div>
         <div className="mt-3 space-y-1">
           <h3 className="font-display text-sm font-semibold text-foreground truncate group-hover:text-terracotta transition-colors">

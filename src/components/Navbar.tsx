@@ -72,6 +72,9 @@ const Navbar = () => {
               >
                 Contact via WhatsApp
               </a>
+              <Link to="/wishlist" onClick={() => setIsOpen(false)} className="font-body text-base font-medium text-foreground py-2">
+                ♥ Wishlist
+              </Link>
               <Link to="/admin" onClick={() => setIsOpen(false)} className="font-body text-base font-medium text-foreground py-2">
                 Admin
               </Link>
