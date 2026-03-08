@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Product, getProductImage } from '@/data/mockProducts';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
+import { trackEvent } from '@/lib/gtag';
 
 interface CheckoutModalProps {
   product: Product;
