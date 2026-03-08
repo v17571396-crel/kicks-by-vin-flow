@@ -316,6 +316,10 @@ const AdminDashboard = () => {
           <TabsContent value="analytics">
             <AnalyticsSection />
           </TabsContent>
+
+          <TabsContent value="reviews">
+            <ReviewsSection />
+          </TabsContent>
         </Tabs>
       </div>
 
