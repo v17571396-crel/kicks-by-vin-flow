@@ -41,6 +41,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Store',
+          name: 'KicksbyVin',
+          description: 'Nairobi\'s trusted thrift shoe plug. Quality second-hand sneakers, inspected & cleaned.',
+          url: 'https://kicksbyvin.lovable.app',
+          priceRange: 'KES 2000 - KES 10000',
+          address: { '@type': 'PostalAddress', addressLocality: 'Nairobi', addressCountry: 'KE' },
+          paymentAccepted: 'M-Pesa',
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

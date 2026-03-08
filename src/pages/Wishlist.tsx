@@ -19,6 +19,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="My Wishlist" description="Your saved kicks on KicksbyVin." path="/wishlist" />
       <Navbar />
       <div className="container mx-auto px-4 py-12">
         <div className="flex items-center gap-3 mb-8">
