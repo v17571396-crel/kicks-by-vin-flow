@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { getProductImage } from '@/data/mockProducts';
@@ -16,6 +16,58 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const lastDistance = useRef(0);
+  const lastCenter = useRef({ x: 0, y: 0 });
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const resetZoom = () => { setScale(1); setTranslate({ x: 0, y: 0 }); };
+
+  useEffect(() => { if (!lightboxOpen) resetZoom(); }, [lightboxOpen]);
+  useEffect(() => { resetZoom(); }, [selectedIndex]);
+
+  const getDistance = (t1: Touch, t2: Touch) =>
+    Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      lastDistance.current = getDistance(e.touches[0], e.touches[1]);
+      lastCenter.current = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getDistance(e.touches[0], e.touches[1]);
+      const newScale = Math.min(4, Math.max(1, scale * (dist / lastDistance.current)));
+      lastDistance.current = dist;
+
+      const center = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+      if (newScale > 1) {
+        setTranslate(prev => ({
+          x: prev.x + (center.x - lastCenter.current.x),
+          y: prev.y + (center.y - lastCenter.current.y),
+        }));
+      } else {
+        setTranslate({ x: 0, y: 0 });
+      }
+      lastCenter.current = center;
+      setScale(newScale);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length < 2 && scale <= 1) resetZoom();
+  };
 
   const goTo = useCallback((index: number, dir?: number) => {
     const next = (index + images.length) % images.length;
