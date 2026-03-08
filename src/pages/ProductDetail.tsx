@@ -10,6 +10,7 @@ import { useProduct } from '@/hooks/useProducts';
 import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
 import FavoriteButton from '@/components/FavoriteButton';
+import SEO from '@/components/SEO';
 
 const ProductDetail = () => {
   const { id } = useParams();
