@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import { Constants } from '@/integrations/supabase/types';
+import ImageUploader from './ImageUploader';
 import type { Product } from '@/data/mockProducts';
 import type { Database } from '@/integrations/supabase/types';
 
