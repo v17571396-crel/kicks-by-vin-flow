@@ -29,6 +29,9 @@ const Navbar = () => {
           >
             Contact
           </a>
+          <Link to="/wishlist" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Heart size={18} />
+          </Link>
           <Link to="/admin" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Admin
           </Link>
