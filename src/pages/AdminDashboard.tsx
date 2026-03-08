@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag } from 'lucide-react';
+import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag, BarChart3 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
