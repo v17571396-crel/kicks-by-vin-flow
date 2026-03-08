@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag, BarChart3 } from 'lucide-react';
+import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag, BarChart3, MessageSquare } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +15,7 @@ import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import OrdersSection from '@/components/admin/OrdersSection';
 import { useOrders } from '@/hooks/useOrders';
 import AnalyticsSection from '@/components/admin/AnalyticsSection';
+import ReviewsSection from '@/components/admin/ReviewsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -253,6 +254,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="analytics" className="font-display text-sm gap-1.5">
               <BarChart3 size={14} /> Analytics
             </TabsTrigger>
+            <TabsTrigger value="reviews" className="font-display text-sm gap-1.5">
+              <MessageSquare size={14} /> Reviews
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="products">
@@ -311,6 +315,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="analytics">
             <AnalyticsSection />
+          </TabsContent>
+
+          <TabsContent value="reviews">
+            <ReviewsSection />
           </TabsContent>
         </Tabs>
       </div>
