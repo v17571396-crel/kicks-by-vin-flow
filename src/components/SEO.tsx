@@ -45,6 +45,9 @@ const SEO = ({
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}
+      {extraJsonLd?.map((schema, i) => (
+        <script key={i} type="application/ld+json">{JSON.stringify(schema)}</script>
+      ))}
     </Helmet>
   );
 };
