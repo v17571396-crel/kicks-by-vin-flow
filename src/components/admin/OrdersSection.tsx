@@ -144,5 +144,6 @@ export default function OrdersSection() {
         </table>
       </div>
     </div>
+    </div>
   );
 }
