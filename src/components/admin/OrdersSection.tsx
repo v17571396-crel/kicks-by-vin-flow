@@ -3,7 +3,8 @@ import { useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { useProducts } from '@/hooks/useProducts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, Package, Clock, CheckCircle, XCircle, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -32,6 +33,30 @@ export default function OrdersSection() {
     }
   };
 
+  const exportCSV = () => {
+    if (orders.length === 0) return;
+    const headers = ['Date', 'Customer', 'Phone', 'Product', 'Amount (KES)', 'Delivery Area', 'Status', 'M-Pesa Receipt'];
+    const rows = orders.map((o) => [
+      format(new Date(o.created_at), 'yyyy-MM-dd HH:mm'),
+      o.customer_name,
+      o.customer_phone,
+      productMap.get(o.product_id) || 'Unknown',
+      o.amount,
+      o.delivery_area,
+      o.status,
+      o.mpesa_receipt || '',
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `kicksbyvin-orders-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Orders exported!');
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
@@ -51,7 +76,13 @@ export default function OrdersSection() {
   }
 
   return (
-    <div className="bg-card rounded-lg overflow-hidden">
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <Button variant="outline" size="sm" className="font-body text-xs gap-1.5" onClick={exportCSV}>
+          <Download size={14} /> Export CSV
+        </Button>
+      </div>
+      <div className="bg-card rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -112,6 +143,7 @@ export default function OrdersSection() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
