@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Product, getProductImage } from '@/data/mockProducts';
+import { supabase } from '@/integrations/supabase/client';
+import { Loader2 } from 'lucide-react';
 
 interface CheckoutModalProps {
   product: Product;
@@ -38,14 +40,34 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
     }
 
     setLoading(true);
-    // Simulate M-Pesa STK Push
-    await new Promise((r) => setTimeout(r, 2000));
-    toast.success('M-Pesa STK Push sent! Check your phone to complete payment.', {
-      description: `KES ${product.price.toLocaleString()} for ${product.title}`,
-      duration: 8000,
-    });
-    setLoading(false);
-    onClose();
+    try {
+      const { data, error } = await supabase.functions.invoke('mpesa-stk-push', {
+        body: {
+          phone: phone.replace(/\s/g, ''),
+          amount: product.price,
+          productId: product.id,
+          customerName: name,
+          deliveryArea: area,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        toast.success('M-Pesa STK Push sent! Check your phone to complete payment.', {
+          description: `KES ${product.price.toLocaleString()} for ${product.title}`,
+          duration: 10000,
+        });
+        onClose();
+      } else {
+        toast.error(data?.error || 'Failed to initiate payment. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Checkout error:', err);
+      toast.error('Payment service unavailable. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const imageUrl = getProductImage(product);
@@ -92,7 +114,11 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
             disabled={loading}
             className="w-full bg-primary text-primary-foreground hover:bg-olive-light font-display text-base py-6"
           >
-            {loading ? 'Sending STK Push...' : `Pay KES ${product.price.toLocaleString()} via M-Pesa`}
+            {loading ? (
+              <><Loader2 size={16} className="mr-2 animate-spin" /> Sending STK Push...</>
+            ) : (
+              `Pay KES ${product.price.toLocaleString()} via M-Pesa`
+            )}
           </Button>
           <p className="text-xs text-muted-foreground text-center font-body">
             You will receive an M-Pesa prompt on your phone. Enter your PIN to complete.
