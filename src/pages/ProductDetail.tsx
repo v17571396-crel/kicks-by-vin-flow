@@ -18,6 +18,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const { data: product, isLoading } = useProduct(id);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const { reviews, averageRating } = useReviews(id);
 
   if (isLoading) {
     return (
