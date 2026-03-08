@@ -68,7 +68,7 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
           `📱 ${phone}\n` +
           `📍 ${area}\n\n` +
           `Payment via M-Pesa. Please confirm once received!`;
-        const whatsappUrl = `https://wa.me/254700000000?text=${encodeURIComponent(whatsappMsg)}`;
+        const whatsappUrl = `https://wa.me/254111235578?text=${encodeURIComponent(whatsappMsg)}`;
         window.open(whatsappUrl, '_blank');
       } else {
         toast.error(data?.error || 'Failed to initiate payment. Please try again.');
