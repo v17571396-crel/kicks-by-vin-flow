@@ -42,7 +42,7 @@ const ProductReviews = ({ productId, productTitle }: ProductReviewsProps) => {
     e.preventDefault();
     if (rating === 0) return;
     addReview.mutate(
-      { rating, comment, reviewerName: name || 'Anonymous' },
+      { rating, comment, reviewerName: name || 'Anonymous', productTitle },
       {
         onSuccess: () => {
           trackEvent('submit_review', { item_id: productId, rating });
