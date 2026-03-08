@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MapPin, Recycle, Shield, Heart } from 'lucide-react';
+import { MapPin, Recycle, Shield, Heart, Star, Quote } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
@@ -137,6 +137,64 @@ const About = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="container mx-auto px-4 py-16 md:py-20">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="font-display text-2xl md:text-3xl font-bold text-foreground text-center"
+        >
+          What Our Customers Say
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+          {[
+            {
+              name: 'Brian M.',
+              location: 'Westlands, Nairobi',
+              text: 'Got a pair of Jordan 1s from KicksbyVin and they looked even better than the photos. Delivery was fast and the M-Pesa process was smooth. Will definitely cop again!',
+              rating: 5,
+            },
+            {
+              name: 'Amina K.',
+              location: 'Kilimani, Nairobi',
+              text: 'I was skeptical about buying thrift shoes online, but KicksbyVin changed my mind. The grading is honest, shoes arrived clean, and the price was unbeatable.',
+              rating: 5,
+            },
+            {
+              name: 'Kevin O.',
+              location: 'South B, Nairobi',
+              text: 'My go-to for sneakers now. The quality checks are thorough and Vin always responds quickly on WhatsApp. Already bought 3 pairs this year.',
+              rating: 5,
+            },
+          ].map((testimonial, i) => (
+            <motion.div
+              key={testimonial.name}
+              custom={i}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              className="bg-card rounded-xl p-6 flex flex-col"
+            >
+              <Quote size={24} className="text-terracotta/40 mb-3" />
+              <p className="font-body text-sm text-foreground/80 leading-relaxed flex-1">
+                "{testimonial.text}"
+              </p>
+              <div className="flex items-center gap-1 mt-4">
+                {Array.from({ length: testimonial.rating }).map((_, j) => (
+                  <Star key={j} size={14} className="fill-terracotta text-terracotta" />
+                ))}
+              </div>
+              <div className="mt-2">
+                <p className="font-display text-sm font-semibold text-foreground">{testimonial.name}</p>
+                <p className="font-body text-xs text-muted-foreground">{testimonial.location}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
