@@ -11,11 +11,14 @@ import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
 import FavoriteButton from '@/components/FavoriteButton';
 import SEO from '@/components/SEO';
+import ProductReviews from '@/components/ProductReviews';
+import { useReviews } from '@/hooks/useReviews';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { data: product, isLoading } = useProduct(id);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const { reviews, averageRating } = useReviews(id);
 
   if (isLoading) {
     return (
@@ -81,6 +84,22 @@ const ProductDetail = () => {
               url: 'https://kicksbyvin.lovable.app',
             },
           },
+          ...(reviews.length > 0 ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: averageRating.toFixed(1),
+              reviewCount: reviews.length,
+              bestRating: 5,
+              worstRating: 1,
+            },
+            review: reviews.slice(0, 5).map((r) => ({
+              '@type': 'Review',
+              author: { '@type': 'Person', name: r.reviewer_name },
+              datePublished: r.created_at.split('T')[0],
+              reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+              reviewBody: r.comment,
+            })),
+          } : {}),
         }}
         extraJsonLd={[{
           '@context': 'https://schema.org',
@@ -156,6 +175,8 @@ const ProductDetail = () => {
             </div>
           </motion.div>
         </div>
+
+        <ProductReviews productId={product.id} />
       </div>
 
       <Footer />
