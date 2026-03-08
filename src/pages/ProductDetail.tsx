@@ -84,6 +84,22 @@ const ProductDetail = () => {
               url: 'https://kicksbyvin.lovable.app',
             },
           },
+          ...(reviews.length > 0 ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: averageRating.toFixed(1),
+              reviewCount: reviews.length,
+              bestRating: 5,
+              worstRating: 1,
+            },
+            review: reviews.slice(0, 5).map((r) => ({
+              '@type': 'Review',
+              author: { '@type': 'Person', name: r.reviewer_name },
+              datePublished: r.created_at.split('T')[0],
+              reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+              reviewBody: r.comment,
+            })),
+          } : {}),
         }}
         extraJsonLd={[{
           '@context': 'https://schema.org',
