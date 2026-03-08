@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Package, Plus, LogOut, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
+import { useCreateProduct, useUpdateProduct, useDeleteProduct } from '@/hooks/useProductMutations';
 import { getProductImage } from '@/data/mockProducts';
+import type { Product } from '@/data/mockProducts';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import ProductFormModal from '@/components/admin/ProductFormModal';
+import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
+import type { Database } from '@/integrations/supabase/types';
+
+type ProductInsert = Database['public']['Tables']['products']['Insert'];
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -122,6 +128,13 @@ const AdminLogin = () => {
 const AdminDashboard = () => {
   const { user, isAdmin, loading, signOut } = useAuth();
   const { data: products = [], isLoading } = useProducts();
+  const createProduct = useCreateProduct();
+  const updateProduct = useUpdateProduct();
+  const deleteProduct = useDeleteProduct();
+
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
 
   if (loading) {
     return (
@@ -146,6 +159,43 @@ const AdminDashboard = () => {
     );
   }
 
+  const handleFormSubmit = async (data: ProductInsert) => {
+    try {
+      if (editingProduct) {
+        await updateProduct.mutateAsync({ id: editingProduct.id, updates: data });
+        toast.success('Product updated!');
+      } else {
+        await createProduct.mutateAsync(data);
+        toast.success('Product added!');
+      }
+      setFormOpen(false);
+      setEditingProduct(null);
+    } catch (err: any) {
+      toast.error(err.message || 'Something went wrong');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await deleteProduct.mutateAsync(deleteTarget.id);
+      toast.success('Product deleted');
+      setDeleteTarget(null);
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to delete');
+    }
+  };
+
+  const openEdit = (product: Product) => {
+    setEditingProduct(product);
+    setFormOpen(true);
+  };
+
+  const openAdd = () => {
+    setEditingProduct(null);
+    setFormOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -156,7 +206,7 @@ const AdminDashboard = () => {
             <p className="font-body text-sm text-muted-foreground">Logged in as {user.email}</p>
           </div>
           <div className="flex gap-2">
-            <Button className="bg-terracotta text-accent-foreground font-display hover:bg-terracotta-light">
+            <Button onClick={openAdd} className="bg-terracotta text-accent-foreground font-display hover:bg-terracotta-light">
               <Plus size={16} className="mr-2" /> Add Shoe
             </Button>
             <Button variant="outline" onClick={signOut}>
@@ -188,6 +238,7 @@ const AdminDashboard = () => {
                   <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Size</th>
                   <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price</th>
                   <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                  <th className="text-right p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -209,6 +260,16 @@ const AdminDashboard = () => {
                         {product.available ? 'Available' : 'Sold Out'}
                       </span>
                     </td>
+                    <td className="p-4 text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="icon" onClick={() => openEdit(product)} title="Edit">
+                          <Pencil size={14} />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(product)} title="Delete" className="text-destructive hover:text-destructive">
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -216,6 +277,22 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      <ProductFormModal
+        open={formOpen}
+        onOpenChange={(open) => { setFormOpen(open); if (!open) setEditingProduct(null); }}
+        product={editingProduct}
+        onSubmit={handleFormSubmit}
+        isSubmitting={createProduct.isPending || updateProduct.isPending}
+      />
+
+      <DeleteConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
+        productTitle={deleteTarget?.title ?? ''}
+        onConfirm={handleDelete}
+        isDeleting={deleteProduct.isPending}
+      />
     </div>
   );
 };
