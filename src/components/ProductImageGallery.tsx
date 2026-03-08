@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getProductImage } from '@/data/mockProducts';
 import type { Product } from '@/data/mockProducts';
@@ -8,43 +8,60 @@ interface ProductImageGalleryProps {
   product: Product;
 }
 
+const SWIPE_THRESHOLD = 50;
+
 const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
   const fallback = getProductImage(product);
   const images = product.images?.length > 0 ? product.images : [fallback];
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-  const goTo = (index: number) => {
-    setSelectedIndex((index + images.length) % images.length);
+  const goTo = (index: number, dir?: number) => {
+    const next = (index + images.length) % images.length;
+    setDirection(dir ?? (next > selectedIndex ? 1 : -1));
+    setSelectedIndex(next);
+  };
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    if (info.offset.x < -SWIPE_THRESHOLD) {
+      goTo(selectedIndex + 1, 1);
+    } else if (info.offset.x > SWIPE_THRESHOLD) {
+      goTo(selectedIndex - 1, -1);
+    }
   };
 
   return (
     <div className="space-y-3">
       {/* Main image */}
       <div className="relative aspect-square rounded-xl overflow-hidden bg-card group">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.img
             key={selectedIndex}
             src={images[selectedIndex]}
             alt={`${product.title} — photo ${selectedIndex + 1}`}
-            className="w-full h-full object-cover"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            className="w-full h-full object-cover cursor-grab active:cursor-grabbing"
+            custom={direction}
+            initial={{ opacity: 0, x: direction * 80 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -direction * 80 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            drag={images.length > 1 ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.3}
+            onDragEnd={handleDragEnd}
           />
         </AnimatePresence>
 
         {images.length > 1 && (
           <>
             <button
-              onClick={() => goTo(selectedIndex - 1)}
+              onClick={() => goTo(selectedIndex - 1, -1)}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/70 backdrop-blur-sm text-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background/90"
-              aria-label="Previous photo"
-            >
+              aria-label="Previous photo">
               <ChevronLeft size={20} />
             </button>
             <button
-              onClick={() => goTo(selectedIndex + 1)}
+              onClick={() => goTo(selectedIndex + 1, 1)}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/70 backdrop-blur-sm text-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background/90"
               aria-label="Next photo"
             >
