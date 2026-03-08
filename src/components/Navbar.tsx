@@ -34,8 +34,13 @@ const Navbar = () => {
           >
             Contact
           </a>
-          <Link to="/wishlist" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/wishlist" className="relative font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             <Heart size={18} />
+            {count > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-terracotta text-accent-foreground text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                {count}
+              </span>
+            )}
           </Link>
           <Link to="/admin" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Admin
