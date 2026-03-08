@@ -12,6 +12,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import ProductFormModal from '@/components/admin/ProductFormModal';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
+import OrdersSection from '@/components/admin/OrdersSection';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Database } from '@/integrations/supabase/types';
 
 type ProductInsert = Database['public']['Tables']['products']['Insert'];
