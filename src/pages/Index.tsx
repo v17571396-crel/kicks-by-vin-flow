@@ -8,6 +8,7 @@ import ProductFilters from '@/components/ProductFilters';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import SEO from '@/components/SEO';
 import { useProducts } from '@/hooks/useProducts';
+import { getProductImage } from '@/data/mockProducts';
 import heroImage from '@/assets/hero-shoes.jpg';
 
 const Index = () => {
@@ -46,13 +47,29 @@ const Index = () => {
           '@context': 'https://schema.org',
           '@type': 'Store',
           name: 'KicksbyVin',
-          description: 'Nairobi\'s trusted thrift shoe plug. Quality second-hand sneakers, inspected & cleaned.',
+          description: "Nairobi's trusted thrift shoe plug. Quality second-hand sneakers, inspected & cleaned.",
           url: 'https://kicksbyvin.lovable.app',
           priceRange: 'KES 2000 - KES 10000',
           address: { '@type': 'PostalAddress', addressLocality: 'Nairobi', addressCountry: 'KE' },
           paymentAccepted: 'M-Pesa',
         }}
       />
+      {/* ItemList structured data for product listings */}
+      {filteredProducts.length > 0 && (
+        <SEO
+          jsonLd={{
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            itemListElement: filteredProducts.map((p, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              url: `https://kicksbyvin.lovable.app/product/${p.id}`,
+              name: p.title,
+              image: getProductImage(p),
+            })),
+          }}
+        />
+      )}
       <Navbar />
 
       {/* Hero */}
