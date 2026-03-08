@@ -9,6 +9,7 @@ import CheckoutModal from '@/components/CheckoutModal';
 import { useProduct } from '@/hooks/useProducts';
 import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
+import FavoriteButton from '@/components/FavoriteButton';
 
 const ProductDetail = () => {
   const { id } = useParams();
