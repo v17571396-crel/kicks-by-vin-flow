@@ -18,7 +18,8 @@ const conditionColor = (condition: string) => {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const imageUrl = getProductImage(product);
-
+  const { data: statsMap } = useAllReviewStats();
+  const stats = statsMap?.[product.id];
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
