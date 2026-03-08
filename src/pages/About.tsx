@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MapPin, Recycle, Shield, Heart } from 'lucide-react';
+import { MapPin, Recycle, Shield, Heart, Star, Quote } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
