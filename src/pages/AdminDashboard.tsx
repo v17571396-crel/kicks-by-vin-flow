@@ -129,6 +129,7 @@ const AdminLogin = () => {
 
 const AdminDashboard = () => {
   const { user, isAdmin, loading, signOut } = useAuth();
+  const [activeTab, setActiveTab] = useState('products');
   const { data: products = [], isLoading } = useProducts();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
