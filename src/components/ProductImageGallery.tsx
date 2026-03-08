@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getProductImage } from '@/data/mockProducts';
 import type { Product } from '@/data/mockProducts';
@@ -8,13 +8,26 @@ interface ProductImageGalleryProps {
   product: Product;
 }
 
+const SWIPE_THRESHOLD = 50;
+
 const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
   const fallback = getProductImage(product);
   const images = product.images?.length > 0 ? product.images : [fallback];
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-  const goTo = (index: number) => {
-    setSelectedIndex((index + images.length) % images.length);
+  const goTo = (index: number, dir?: number) => {
+    const next = (index + images.length) % images.length;
+    setDirection(dir ?? (next > selectedIndex ? 1 : -1));
+    setSelectedIndex(next);
+  };
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    if (info.offset.x < -SWIPE_THRESHOLD) {
+      goTo(selectedIndex + 1, 1);
+    } else if (info.offset.x > SWIPE_THRESHOLD) {
+      goTo(selectedIndex - 1, -1);
+    }
   };
 
   return (
