@@ -32,14 +32,14 @@ export default function AnalyticsSection() {
 
   const filteredOrders = useMemo(() => {
     const from = startOfDay(dateFrom);
-    const to = startOfDay(subDays(dateTo, -1)); // include the end date
+    const toEnd = startOfDay(subDays(dateTo, -1));
     return orders.filter((o) => {
       const created = new Date(o.created_at);
-      return !isBefore(created, from) && isBefore(created, to);
+      return created >= from && created < toEnd;
     });
   }, [orders, dateFrom, dateTo]);
 
-  const dayCount = differenceInDays(dateTo, dateFrom) + 1;
+  const dayCount = Math.max(1, differenceInDays(dateTo, dateFrom) + 1);
 
   const stats = useMemo(() => {
     const totalRevenue = filteredOrders
@@ -52,16 +52,18 @@ export default function AnalyticsSection() {
   }, [filteredOrders]);
 
   const revenueByDay = useMemo(() => {
+    const cappedDays = Math.min(dayCount, 90);
     const result: { date: string; revenue: number; orders: number }[] = [];
-    for (let i = dayCount - 1; i >= 0; i--) {
+    for (let i = cappedDays - 1; i >= 0; i--) {
       const day = startOfDay(subDays(dateTo, i));
-      const nextDay = startOfDay(subDays(dateTo, i - 1));
+      const nextDay = new Date(day);
+      nextDay.setDate(nextDay.getDate() + 1);
       const dayOrders = filteredOrders.filter((o) => {
         const created = new Date(o.created_at);
-        return !isBefore(created, day) && isBefore(created, nextDay) && o.status !== 'cancelled';
+        return created >= day && created < nextDay && o.status !== 'cancelled';
       });
       result.push({
-        date: format(day, dayCount > 30 ? 'MMM d' : 'MMM d'),
+        date: format(day, 'MMM d'),
         revenue: dayOrders.reduce((s, o) => s + o.amount, 0),
         orders: dayOrders.length,
       });
