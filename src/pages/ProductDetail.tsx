@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import FavoriteButton from '@/components/FavoriteButton';
 import SEO from '@/components/SEO';
 import ProductReviews from '@/components/ProductReviews';
+import ProductImageGallery from '@/components/ProductImageGallery';
 import { useReviews } from '@/hooks/useReviews';
 
 const ProductDetail = () => {
