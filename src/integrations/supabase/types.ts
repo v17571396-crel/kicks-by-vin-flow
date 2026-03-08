@@ -14,16 +14,133 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          delivery_area: string
+          id: string
+          mpesa_receipt: string | null
+          product_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          delivery_area: string
+          id?: string
+          mpesa_receipt?: string | null
+          product_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          delivery_area?: string
+          id?: string
+          mpesa_receipt?: string | null
+          product_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          available: boolean
+          category: string
+          condition: Database["public"]["Enums"]["shoe_condition"]
+          created_at: string
+          description: string
+          id: string
+          images: string[]
+          price: number
+          size: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean
+          category?: string
+          condition: Database["public"]["Enums"]["shoe_condition"]
+          created_at?: string
+          description: string
+          id?: string
+          images?: string[]
+          price: number
+          size: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean
+          category?: string
+          condition?: Database["public"]["Enums"]["shoe_condition"]
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          price?: number
+          size?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      shoe_condition:
+        | "Grade A - Like New"
+        | "Grade A - Very Good"
+        | "Grade B - Gently Used"
+        | "Grade B - Good"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +267,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      shoe_condition: [
+        "Grade A - Like New",
+        "Grade A - Very Good",
+        "Grade B - Gently Used",
+        "Grade B - Good",
+      ],
+    },
   },
 } as const
