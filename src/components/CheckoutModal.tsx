@@ -41,6 +41,11 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
     }
 
     setLoading(true);
+    trackEvent('begin_checkout', {
+      currency: 'KES',
+      value: product.price,
+      items: [{ item_id: product.id, item_name: product.title, price: product.price }],
+    });
     try {
       const { data, error } = await supabase.functions.invoke('mpesa-stk-push', {
         body: {
