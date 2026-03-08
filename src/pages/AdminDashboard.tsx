@@ -234,53 +234,70 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        <div className="bg-card rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Shoe</th>
-                  <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Size</th>
-                  <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price</th>
-                  <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
-                  <th className="text-right p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="border-b border-border/50 last:border-0">
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <img src={getProductImage(product)} alt={product.title} className="w-10 h-10 rounded-md object-cover" />
-                        <div>
-                          <p className="font-display text-sm font-medium text-foreground">{product.title}</p>
-                          <p className="font-body text-xs text-muted-foreground">{product.condition}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4 font-body text-sm text-foreground hidden md:table-cell">{product.size}</td>
-                    <td className="p-4 font-display text-sm font-semibold text-foreground">KES {product.price.toLocaleString()}</td>
-                    <td className="p-4">
-                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${product.available ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
-                        {product.available ? 'Available' : 'Sold Out'}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(product)} title="Edit">
-                          <Pencil size={14} />
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(product)} title="Delete" className="text-destructive hover:text-destructive">
-                          <Trash2 size={14} />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="bg-card">
+            <TabsTrigger value="products" className="font-display text-sm gap-1.5">
+              <Package size={14} /> Products
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="font-display text-sm gap-1.5">
+              <ShoppingBag size={14} /> Orders
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="products">
+            <div className="bg-card rounded-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Shoe</th>
+                      <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Size</th>
+                      <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price</th>
+                      <th className="text-left p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                      <th className="text-right p-4 font-display text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr key={product.id} className="border-b border-border/50 last:border-0">
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <img src={getProductImage(product)} alt={product.title} className="w-10 h-10 rounded-md object-cover" />
+                            <div>
+                              <p className="font-display text-sm font-medium text-foreground">{product.title}</p>
+                              <p className="font-body text-xs text-muted-foreground">{product.condition}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-4 font-body text-sm text-foreground hidden md:table-cell">{product.size}</td>
+                        <td className="p-4 font-display text-sm font-semibold text-foreground">KES {product.price.toLocaleString()}</td>
+                        <td className="p-4">
+                          <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${product.available ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
+                            {product.available ? 'Available' : 'Sold Out'}
+                          </span>
+                        </td>
+                        <td className="p-4 text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => openEdit(product)} title="Edit">
+                              <Pencil size={14} />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(product)} title="Delete" className="text-destructive hover:text-destructive">
+                              <Trash2 size={14} />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="orders">
+            <OrdersSection />
+          </TabsContent>
+        </Tabs>
       </div>
 
       <ProductFormModal
