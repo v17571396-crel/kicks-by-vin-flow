@@ -205,22 +205,34 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
             <AnimatePresence mode="wait" custom={direction}>
               <motion.img
                 key={selectedIndex}
+                ref={imgRef}
                 src={images[selectedIndex]}
                 alt={`${product.title} — photo ${selectedIndex + 1}`}
-                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg cursor-grab active:cursor-grabbing select-none"
+                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg select-none"
+                style={{
+                  transform: `scale(${scale}) translate(${translate.x / scale}px, ${translate.y / scale}px)`,
+                  touchAction: 'none',
+                  cursor: scale > 1 ? 'move' : (images.length > 1 ? 'grab' : 'default'),
+                }}
                 custom={direction}
                 initial={{ opacity: 0, scale: 0.9, x: direction * 100 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.9, x: -direction * 100 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
-                onClick={(e) => e.stopPropagation()}
-                drag={images.length > 1 ? 'x' : false}
+                onClick={(e) => { e.stopPropagation(); if (scale > 1) resetZoom(); }}
+                onDoubleClick={(e) => { e.stopPropagation(); scale > 1 ? resetZoom() : setScale(2.5); }}
+                drag={scale <= 1 && images.length > 1 ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.3}
                 onDragEnd={(_, info) => {
-                  if (info.offset.x < -SWIPE_THRESHOLD) goTo(selectedIndex + 1, 1);
-                  else if (info.offset.x > SWIPE_THRESHOLD) goTo(selectedIndex - 1, -1);
+                  if (scale <= 1) {
+                    if (info.offset.x < -SWIPE_THRESHOLD) goTo(selectedIndex + 1, 1);
+                    else if (info.offset.x > SWIPE_THRESHOLD) goTo(selectedIndex - 1, -1);
+                  }
                 }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
             </AnimatePresence>
 
