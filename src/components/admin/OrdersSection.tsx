@@ -76,7 +76,13 @@ export default function OrdersSection() {
   }
 
   return (
-    <div className="bg-card rounded-lg overflow-hidden">
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <Button variant="outline" size="sm" className="font-body text-xs gap-1.5" onClick={exportCSV}>
+          <Download size={14} /> Export CSV
+        </Button>
+      </div>
+      <div className="bg-card rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
