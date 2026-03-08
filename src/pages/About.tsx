@@ -3,6 +3,7 @@ import { MapPin, Recycle, Shield, Heart, Star, Quote } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import SEO from '@/components/SEO';
 
 const values = [
   {
