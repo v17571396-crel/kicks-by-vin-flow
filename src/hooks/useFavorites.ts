@@ -32,18 +32,33 @@ export function useFavorites() {
           .eq('user_id', user.id)
           .eq('product_id', productId);
         if (error) throw error;
+        return { productId, action: 'removed' as const };
       } else {
         const { error } = await supabase
           .from('favorites')
           .insert({ user_id: user.id, product_id: productId });
         if (error) throw error;
+        return { productId, action: 'added' as const };
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
+    onMutate: async (productId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['favorites', user?.id] });
+      const previous = queryClient.getQueryData<string[]>(['favorites', user?.id]) ?? [];
+      const isFav = previous.includes(productId);
+      queryClient.setQueryData<string[]>(
+        ['favorites', user?.id],
+        isFav ? previous.filter((id) => id !== productId) : [...previous, productId],
+      );
+      return { previous };
     },
-    onError: () => {
+    onError: (_err, _productId, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['favorites', user?.id], context.previous);
+      }
       toast.error('Failed to update wishlist');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
     },
   });
 
