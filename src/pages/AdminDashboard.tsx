@@ -133,6 +133,7 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('products');
   const { data: products = [], isLoading } = useProducts();
   const { data: orders = [] } = useOrders();
+  const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
 
