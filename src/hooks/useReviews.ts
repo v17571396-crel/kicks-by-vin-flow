@@ -45,21 +45,10 @@ export function useReviews(productId: string | undefined) {
       if (error) throw error;
       return { reviewerName, rating, comment, productTitle };
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
       queryClient.invalidateQueries({ queryKey: ['review-stats'] });
       toast.success('Review submitted!');
-
-      // Send WhatsApp notification to admin
-      const stars = '⭐'.repeat(data.rating);
-      const msg = `📝 New Review — KicksbyVin\n\n` +
-        `👟 ${data.productTitle}\n` +
-        `${stars} (${data.rating}/5)\n` +
-        `👤 ${data.reviewerName}\n` +
-        `💬 ${data.comment || '(no comment)'}\n\n` +
-        `Check the admin dashboard for details.`;
-      const whatsappUrl = `https://wa.me/254111235578?text=${encodeURIComponent(msg)}`;
-      window.open(whatsappUrl, '_blank');
     },
     onError: () => {
       toast.error('Failed to submit review');
