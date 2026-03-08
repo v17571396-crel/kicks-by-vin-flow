@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag } from 'lucide-react';
+import { Package, Plus, LogOut, Eye, EyeOff, Loader2, Pencil, Trash2, ShoppingBag, BarChart3 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +14,7 @@ import ProductFormModal from '@/components/admin/ProductFormModal';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 import OrdersSection from '@/components/admin/OrdersSection';
 import { useOrders } from '@/hooks/useOrders';
+import AnalyticsSection from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -250,6 +251,9 @@ const AdminDashboard = () => {
               )}
             </TabsTrigger>
           </TabsList>
+            <TabsTrigger value="analytics" className="font-display text-sm gap-1.5">
+              <BarChart3 size={14} /> Analytics
+            </TabsTrigger>
 
           <TabsContent value="products">
             <div className="bg-card rounded-lg overflow-hidden">
@@ -303,6 +307,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="orders">
             <OrdersSection />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AnalyticsSection />
           </TabsContent>
         </Tabs>
       </div>
