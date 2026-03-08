@@ -5,6 +5,7 @@ interface SEOProps {
   description?: string;
   path?: string;
   type?: string;
+  image?: string;
   jsonLd?: Record<string, unknown>;
   extraJsonLd?: Record<string, unknown>[];
 }
@@ -18,11 +19,13 @@ const SEO = ({
   description = 'Shop quality second-hand sneakers in Nairobi. Inspected, cleaned, affordable. Pay via M-Pesa.',
   path = '/',
   type = 'website',
+  image,
   jsonLd,
   extraJsonLd,
 }: SEOProps) => {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Quality Thrift Shoes Nairobi`;
   const url = `${BASE_URL}${path}`;
+  const ogImage = image || DEFAULT_IMAGE;
 
   return (
     <Helmet>
@@ -34,13 +37,13 @@ const SEO = ({
       <meta property="og:description" content={description} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
-      <meta property="og:image" content={DEFAULT_IMAGE} />
+      <meta property="og:image" content={ogImage} />
       <meta property="og:site_name" content={SITE_NAME} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={DEFAULT_IMAGE} />
+      <meta name="twitter:image" content={ogImage} />
 
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>

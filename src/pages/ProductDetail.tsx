@@ -55,6 +55,7 @@ const ProductDetail = () => {
         description={`${product.title} — ${product.condition}, Size ${product.size}. KES ${product.price.toLocaleString()}. Buy via M-Pesa on KicksbyVin.`}
         path={`/product/${product.id}`}
         type="product"
+        image={imageUrl}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Product',
