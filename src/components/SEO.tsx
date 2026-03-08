@@ -6,6 +6,7 @@ interface SEOProps {
   path?: string;
   type?: string;
   jsonLd?: Record<string, unknown>;
+  extraJsonLd?: Record<string, unknown>[];
 }
 
 const SITE_NAME = 'KicksbyVin';
@@ -18,6 +19,7 @@ const SEO = ({
   path = '/',
   type = 'website',
   jsonLd,
+  extraJsonLd,
 }: SEOProps) => {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Quality Thrift Shoes Nairobi`;
   const url = `${BASE_URL}${path}`;
@@ -43,6 +45,9 @@ const SEO = ({
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}
+      {extraJsonLd?.map((schema, i) => (
+        <script key={i} type="application/ld+json">{JSON.stringify(schema)}</script>
+      ))}
     </Helmet>
   );
 };

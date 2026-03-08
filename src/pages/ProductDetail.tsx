@@ -81,6 +81,15 @@ const ProductDetail = () => {
             },
           },
         }}
+        extraJsonLd={[{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://kicksbyvin.lovable.app/' },
+            { '@type': 'ListItem', position: 2, name: 'Shop', item: 'https://kicksbyvin.lovable.app/#shop' },
+            { '@type': 'ListItem', position: 3, name: product.title, item: `https://kicksbyvin.lovable.app/product/${product.id}` },
+          ],
+        }]}
       />
       <Navbar />
 
