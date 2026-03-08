@@ -9,6 +9,7 @@ import { trackEvent } from '@/lib/gtag';
 
 interface ProductReviewsProps {
   productId: string;
+  productTitle: string;
 }
 
 const StarRating = ({ rating, onRate, interactive = false }: { rating: number; onRate?: (r: number) => void; interactive?: boolean }) => (
