@@ -15,37 +15,45 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [mode, setMode] = useState<'login' | 'forgot'>('login');
+  const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const { signIn, resetPassword } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error('Please enter your credentials');
-      return;
-    }
+    if (!email || !password) { toast.error('Please enter your credentials'); return; }
     setSubmitting(true);
     const { error } = await signIn(email, password);
     if (error) toast.error(error);
     setSubmitting(false);
   };
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error('Please enter your email');
-      return;
-    }
+    if (!email || !password) { toast.error('Please enter your credentials'); return; }
+    if (password.length < 6) { toast.error('Password must be at least 6 characters'); return; }
     setSubmitting(true);
-    const { error } = await resetPassword(email);
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { error } = await supabase.auth.signUp({ email, password });
     if (error) {
-      toast.error(error);
+      toast.error(error.message);
     } else {
-      toast.success('Check your email for a password reset link.');
+      toast.success('Account created! Check your email to confirm, then sign in.');
       setMode('login');
     }
     setSubmitting(false);
   };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) { toast.error('Please enter your email'); return; }
+    setSubmitting(true);
+    const { error } = await resetPassword(email);
+    if (error) toast.error(error);
+    else { toast.success('Check your email for a password reset link.'); setMode('login'); }
+    setSubmitting(false);
+  };
+
+  const title = mode === 'login' ? 'Admin Login' : mode === 'signup' ? 'Create Account' : 'Reset Password';
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,13 +61,11 @@ const AdminLogin = () => {
       <div className="flex items-center justify-center py-20 px-4">
         <div className="w-full max-w-sm space-y-6">
           <div className="text-center">
-            <h1 className="font-display text-2xl font-bold text-foreground">
-              {mode === 'login' ? 'Admin Login' : 'Reset Password'}
-            </h1>
+            <h1 className="font-display text-2xl font-bold text-foreground">{title}</h1>
             <p className="font-body text-sm text-muted-foreground mt-1">KicksbyVin Dashboard</p>
           </div>
-          {mode === 'login' ? (
-            <form onSubmit={handleLogin} className="space-y-4">
+          {(mode === 'login' || mode === 'signup') ? (
+            <form onSubmit={mode === 'login' ? handleLogin : handleSignup} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="font-body text-sm">Email</Label>
                 <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vin@kicksbyvin.co.ke" className="bg-card" />
@@ -75,11 +81,22 @@ const AdminLogin = () => {
               </div>
               <Button type="submit" disabled={submitting} className="w-full bg-primary text-primary-foreground font-display py-5">
                 {submitting ? <Loader2 size={16} className="mr-2 animate-spin" /> : null}
-                Sign In
+                {mode === 'login' ? 'Sign In' : 'Sign Up'}
               </Button>
-              <button type="button" onClick={() => setMode('forgot')} className="w-full text-center text-sm text-muted-foreground hover:text-foreground font-body">
-                Forgot password?
-              </button>
+              {mode === 'login' ? (
+                <>
+                  <button type="button" onClick={() => setMode('signup')} className="w-full text-center text-sm text-muted-foreground hover:text-foreground font-body">
+                    Don't have an account? Sign up
+                  </button>
+                  <button type="button" onClick={() => setMode('forgot')} className="w-full text-center text-sm text-muted-foreground hover:text-foreground font-body">
+                    Forgot password?
+                  </button>
+                </>
+              ) : (
+                <button type="button" onClick={() => setMode('login')} className="w-full text-center text-sm text-muted-foreground hover:text-foreground font-body">
+                  Already have an account? Sign in
+                </button>
+              )}
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
