@@ -5,6 +5,7 @@ interface SEOProps {
   description?: string;
   path?: string;
   type?: string;
+  image?: string;
   jsonLd?: Record<string, unknown>;
   extraJsonLd?: Record<string, unknown>[];
 }
