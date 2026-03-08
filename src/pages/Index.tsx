@@ -8,6 +8,7 @@ import ProductFilters from '@/components/ProductFilters';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import SEO from '@/components/SEO';
 import { useProducts } from '@/hooks/useProducts';
+import { getProductImage } from '@/data/mockProducts';
 import heroImage from '@/assets/hero-shoes.jpg';
 
 const Index = () => {
