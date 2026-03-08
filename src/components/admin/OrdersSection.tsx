@@ -33,6 +33,30 @@ export default function OrdersSection() {
     }
   };
 
+  const exportCSV = () => {
+    if (orders.length === 0) return;
+    const headers = ['Date', 'Customer', 'Phone', 'Product', 'Amount (KES)', 'Delivery Area', 'Status', 'M-Pesa Receipt'];
+    const rows = orders.map((o) => [
+      format(new Date(o.created_at), 'yyyy-MM-dd HH:mm'),
+      o.customer_name,
+      o.customer_phone,
+      productMap.get(o.product_id) || 'Unknown',
+      o.amount,
+      o.delivery_area,
+      o.status,
+      o.mpesa_receipt || '',
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `kicksbyvin-orders-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Orders exported!');
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
