@@ -58,7 +58,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <p className="font-display text-lg font-bold text-foreground">
               KES {product.price.toLocaleString()}
             </p>
-            <p className="text-xs text-muted-foreground font-body">{product.size}</p>
+            <div className="flex items-center gap-1.5">
+              {stats && stats.count > 0 && (
+                <span className="flex items-center gap-0.5 text-xs text-muted-foreground font-body">
+                  <Star size={11} className="fill-terracotta text-terracotta" />
+                  {stats.averageRating.toFixed(1)}
+                  <span className="hidden sm:inline">({stats.count})</span>
+                </span>
+              )}
+              <p className="text-xs text-muted-foreground font-body">{product.size}</p>
+            </div>
           </div>
         </div>
       </Link>
