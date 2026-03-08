@@ -19,6 +19,12 @@ const Index = () => {
 
   const { data: products = [], isLoading } = useProducts();
 
+  // Extract unique sizes from actual products
+  const availableSizes = useMemo(() => {
+    const sizes = new Set(products.map((p) => p.size));
+    return Array.from(sizes);
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -29,7 +35,7 @@ const Index = () => {
       );
     }
     if (sizeFilter !== 'all') {
-      result = result.filter((p) => p.size.includes(sizeFilter));
+      result = result.filter((p) => p.size === sizeFilter);
     }
     if (conditionFilter !== 'all') {
       result = result.filter((p) => p.condition.includes(conditionFilter));
