@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import { Constants } from '@/integrations/supabase/types';
+import ImageUploader from './ImageUploader';
 import type { Product } from '@/data/mockProducts';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -107,6 +108,11 @@ export default function ProductFormModal({ open, onOpenChange, product, onSubmit
               <Label className="font-body text-sm">Category</Label>
               <Input value={form.category || ''} onChange={(e) => update('category', e.target.value)} placeholder="Sneakers" className="bg-card" />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="font-body text-sm">Images</Label>
+            <ImageUploader images={(form.images as string[]) || []} onChange={(imgs) => update('images', imgs)} />
           </div>
 
           <div className="flex items-center gap-3">
