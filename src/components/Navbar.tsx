@@ -7,6 +7,9 @@ import { useFavorites } from '@/hooks/useFavorites';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  const { favoriteIds } = useFavorites();
+  const count = user ? favoriteIds.length : 0;
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
