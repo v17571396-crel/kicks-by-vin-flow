@@ -4,7 +4,8 @@ import Navbar from '@/components/Navbar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { mockProducts, Product } from '@/data/mockProducts';
+import { useProducts } from '@/hooks/useProducts';
+import { getProductImage } from '@/data/mockProducts';
 import { toast } from 'sonner';
 
 const AdminDashboard = () => {
@@ -12,11 +13,10 @@ const AdminDashboard = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [products] = useState<Product[]>(mockProducts);
+  const { data: products = [], isLoading } = useProducts();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login — in production, this would use Lovable Cloud auth
     if (email && password) {
       setIsLoggedIn(true);
       toast.success('Welcome back, Vin!');
@@ -53,9 +53,6 @@ const AdminDashboard = () => {
                 <LogIn size={16} className="mr-2" /> Sign In
               </Button>
             </form>
-            <p className="text-xs text-muted-foreground text-center font-body">
-              Connect Lovable Cloud to enable real authentication.
-            </p>
           </div>
         </div>
       </div>
@@ -76,13 +73,12 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'Total Pairs', value: products.length },
-            { label: 'Available', value: products.filter((p) => p.available).length },
-            { label: 'Sold Out', value: products.filter((p) => !p.available).length },
-            { label: 'Revenue (KES)', value: products.filter((p) => !p.available).reduce((s, p) => s + p.price, 0).toLocaleString() },
+            { label: 'Total Pairs', value: isLoading ? '...' : products.length },
+            { label: 'Available', value: isLoading ? '...' : products.filter((p) => p.available).length },
+            { label: 'Sold Out', value: isLoading ? '...' : products.filter((p) => !p.available).length },
+            { label: 'Revenue (KES)', value: isLoading ? '...' : products.filter((p) => !p.available).reduce((s, p) => s + p.price, 0).toLocaleString() },
           ].map((stat) => (
             <div key={stat.label} className="bg-card rounded-lg p-4">
               <p className="font-body text-xs text-muted-foreground">{stat.label}</p>
@@ -91,7 +87,6 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Product table */}
         <div className="bg-card rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -108,7 +103,7 @@ const AdminDashboard = () => {
                   <tr key={product.id} className="border-b border-border/50 last:border-0">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <img src={product.images[0]} alt={product.title} className="w-10 h-10 rounded-md object-cover" />
+                        <img src={getProductImage(product)} alt={product.title} className="w-10 h-10 rounded-md object-cover" />
                         <div>
                           <p className="font-display text-sm font-medium text-foreground">{product.title}</p>
                           <p className="font-body text-xs text-muted-foreground">{product.condition}</p>

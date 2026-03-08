@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import ProductFilters from '@/components/ProductFilters';
 import WhatsAppButton from '@/components/WhatsAppButton';
-import { mockProducts } from '@/data/mockProducts';
+import { useProducts } from '@/hooks/useProducts';
 import heroImage from '@/assets/hero-shoes.jpg';
 
 const Index = () => {
@@ -15,26 +15,28 @@ const Index = () => {
   const [conditionFilter, setConditionFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
+  const { data: products = [], isLoading } = useProducts();
+
   const filteredProducts = useMemo(() => {
-    let products = [...mockProducts];
+    let result = [...products];
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      products = products.filter(
+      result = result.filter(
         (p) => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
       );
     }
     if (sizeFilter !== 'all') {
-      products = products.filter((p) => p.size.includes(sizeFilter));
+      result = result.filter((p) => p.size.includes(sizeFilter));
     }
     if (conditionFilter !== 'all') {
-      products = products.filter((p) => p.condition.includes(conditionFilter));
+      result = result.filter((p) => p.condition.includes(conditionFilter));
     }
-    if (sortBy === 'price-low') products.sort((a, b) => a.price - b.price);
-    if (sortBy === 'price-high') products.sort((a, b) => b.price - a.price);
+    if (sortBy === 'price-low') result.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-high') result.sort((a, b) => b.price - a.price);
 
-    return products;
-  }, [searchQuery, sizeFilter, conditionFilter, sortBy]);
+    return result;
+  }, [products, searchQuery, sizeFilter, conditionFilter, sortBy]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,7 +82,7 @@ const Index = () => {
             Available Kicks
           </h2>
           <p className="font-body text-muted-foreground mt-1">
-            {filteredProducts.length} pair{filteredProducts.length !== 1 && 's'} in stock
+            {isLoading ? 'Loading...' : `${filteredProducts.length} pair${filteredProducts.length !== 1 ? 's' : ''} in stock`}
           </p>
         </div>
 
@@ -101,7 +103,7 @@ const Index = () => {
           ))}
         </div>
 
-        {filteredProducts.length === 0 && (
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-16">
             <p className="font-display text-lg text-muted-foreground">No kicks match your filters.</p>
             <button

@@ -6,13 +6,25 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import CheckoutModal from '@/components/CheckoutModal';
-import { mockProducts } from '@/data/mockProducts';
+import { useProduct } from '@/hooks/useProducts';
+import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = mockProducts.find((p) => p.id === id);
+  const { data: product, isLoading } = useProduct(id);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <p className="font-display text-xl text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -28,6 +40,8 @@ const ProductDetail = () => {
     );
   }
 
+  const imageUrl = getProductImage(product);
+
   const whatsappUrl = `https://wa.me/254700000000?text=${encodeURIComponent(
     `Hey KicksbyVin! I'm interested in: ${product.title} (${product.size}) - KES ${product.price.toLocaleString()}. Can I get more photos?`
   )}`;
@@ -42,22 +56,12 @@ const ProductDetail = () => {
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
             <div className="aspect-square rounded-xl overflow-hidden bg-card">
-              <img
-                src={product.images[0]}
-                alt={product.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={imageUrl} alt={product.title} className="w-full h-full object-cover" />
             </div>
           </motion.div>
 
-          {/* Details */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -67,19 +71,10 @@ const ProductDetail = () => {
             <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-card text-muted-foreground font-body w-fit">
               {product.condition}
             </span>
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3">
-              {product.title}
-            </h1>
-            <p className="font-display text-2xl font-bold text-terracotta mt-2">
-              KES {product.price.toLocaleString()}
-            </p>
-            <p className="font-body text-sm text-muted-foreground mt-1">
-              Size: {product.size}
-            </p>
-
-            <p className="font-body text-foreground/80 mt-6 leading-relaxed">
-              {product.description}
-            </p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3">{product.title}</h1>
+            <p className="font-display text-2xl font-bold text-terracotta mt-2">KES {product.price.toLocaleString()}</p>
+            <p className="font-body text-sm text-muted-foreground mt-1">Size: {product.size}</p>
+            <p className="font-body text-foreground/80 mt-6 leading-relaxed">{product.description}</p>
 
             <div className="mt-8 space-y-3">
               {product.available ? (
@@ -92,9 +87,7 @@ const ProductDetail = () => {
                   Buy via M-Pesa — KES {product.price.toLocaleString()}
                 </Button>
               ) : (
-                <Button disabled className="w-full font-display text-base py-6" size="lg">
-                  Sold Out
-                </Button>
+                <Button disabled className="w-full font-display text-base py-6" size="lg">Sold Out</Button>
               )}
 
               <a
@@ -120,11 +113,7 @@ const ProductDetail = () => {
 
       <Footer />
       <WhatsAppButton productTitle={product.title} />
-      <CheckoutModal
-        product={product}
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-      />
+      <CheckoutModal product={product} isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 };
