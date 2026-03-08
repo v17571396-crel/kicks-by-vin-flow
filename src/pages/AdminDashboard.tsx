@@ -243,6 +243,11 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="orders" className="font-display text-sm gap-1.5">
               <ShoppingBag size={14} /> Orders
+              {orders.filter(o => o.status === 'pending').length > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                  {orders.filter(o => o.status === 'pending').length}
+                </span>
+              )}
             </TabsTrigger>
           </TabsList>
 
