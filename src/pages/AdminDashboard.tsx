@@ -209,9 +209,11 @@ const AdminDashboard = () => {
             <p className="font-body text-sm text-muted-foreground">Logged in as {user.email}</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={openAdd} className="bg-terracotta text-accent-foreground font-display hover:bg-terracotta-light">
-              <Plus size={16} className="mr-2" /> Add Shoe
-            </Button>
+            {activeTab === 'products' && (
+              <Button onClick={openAdd} className="bg-terracotta text-accent-foreground font-display hover:bg-terracotta-light">
+                <Plus size={16} className="mr-2" /> Add Shoe
+              </Button>
+            )}
             <Button variant="outline" onClick={signOut}>
               <LogOut size={16} />
             </Button>
