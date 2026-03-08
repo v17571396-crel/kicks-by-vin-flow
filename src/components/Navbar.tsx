@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
@@ -29,6 +29,9 @@ const Navbar = () => {
           >
             Contact
           </a>
+          <Link to="/wishlist" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Heart size={18} />
+          </Link>
           <Link to="/admin" className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             Admin
           </Link>
@@ -69,6 +72,9 @@ const Navbar = () => {
               >
                 Contact via WhatsApp
               </a>
+              <Link to="/wishlist" onClick={() => setIsOpen(false)} className="font-body text-base font-medium text-foreground py-2">
+                ♥ Wishlist
+              </Link>
               <Link to="/admin" onClick={() => setIsOpen(false)} className="font-body text-base font-medium text-foreground py-2">
                 Admin
               </Link>

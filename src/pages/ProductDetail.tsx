@@ -9,6 +9,7 @@ import CheckoutModal from '@/components/CheckoutModal';
 import { useProduct } from '@/hooks/useProducts';
 import { getProductImage } from '@/data/mockProducts';
 import { Button } from '@/components/ui/button';
+import FavoriteButton from '@/components/FavoriteButton';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -71,7 +72,10 @@ const ProductDetail = () => {
             <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-card text-muted-foreground font-body w-fit">
               {product.condition}
             </span>
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3">{product.title}</h1>
+            <div className="flex items-start justify-between gap-2 mt-3">
+              <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">{product.title}</h1>
+              <FavoriteButton productId={product.id} size={24} className="mt-1 shrink-0" />
+            </div>
             <p className="font-display text-2xl font-bold text-terracotta mt-2">KES {product.price.toLocaleString()}</p>
             <p className="font-body text-sm text-muted-foreground mt-1">Size: {product.size}</p>
             <p className="font-body text-foreground/80 mt-6 leading-relaxed">{product.description}</p>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product, getProductImage } from '@/data/mockProducts';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface ProductCardProps {
   product: Product;
@@ -41,6 +42,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${conditionColor(product.condition)}`}>
               {product.condition}
             </span>
+          </div>
+          <div className="absolute top-3 right-3">
+            <FavoriteButton productId={product.id} size={18} />
           </div>
         </div>
         <div className="mt-3 space-y-1">
