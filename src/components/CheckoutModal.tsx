@@ -59,6 +59,17 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
           duration: 10000,
         });
         onClose();
+
+        // Open WhatsApp with order details for the admin
+        const whatsappMsg = `🛒 New Order — KicksbyVin\n\n` +
+          `👟 ${product.title}\n` +
+          `💰 KES ${product.price.toLocaleString()}\n` +
+          `👤 ${name}\n` +
+          `📱 ${phone}\n` +
+          `📍 ${area}\n\n` +
+          `Payment via M-Pesa. Please confirm once received!`;
+        const whatsappUrl = `https://wa.me/254700000000?text=${encodeURIComponent(whatsappMsg)}`;
+        window.open(whatsappUrl, '_blank');
       } else {
         toast.error(data?.error || 'Failed to initiate payment. Please try again.');
       }
