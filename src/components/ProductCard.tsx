@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Product, getProductImage } from '@/data/mockProducts';
 import FavoriteButton from '@/components/FavoriteButton';
+import { useAllReviewStats } from '@/hooks/useReviewStats';
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +18,8 @@ const conditionColor = (condition: string) => {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const imageUrl = getProductImage(product);
-
+  const { data: statsMap } = useAllReviewStats();
+  const stats = statsMap?.[product.id];
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -55,7 +58,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <p className="font-display text-lg font-bold text-foreground">
               KES {product.price.toLocaleString()}
             </p>
-            <p className="text-xs text-muted-foreground font-body">{product.size}</p>
+            <div className="flex items-center gap-1.5">
+              {stats && stats.count > 0 && (
+                <span className="flex items-center gap-0.5 text-xs text-muted-foreground font-body">
+                  <Star size={11} className="fill-terracotta text-terracotta" />
+                  {stats.averageRating.toFixed(1)}
+                  <span className="hidden sm:inline">({stats.count})</span>
+                </span>
+              )}
+              <p className="text-xs text-muted-foreground font-body">{product.size}</p>
+            </div>
           </div>
         </div>
       </Link>
