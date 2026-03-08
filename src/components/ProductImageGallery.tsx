@@ -55,14 +55,13 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
         {images.length > 1 && (
           <>
             <button
-              onClick={() => goTo(selectedIndex - 1)}
+              onClick={() => goTo(selectedIndex - 1, -1)}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/70 backdrop-blur-sm text-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background/90"
-              aria-label="Previous photo"
-            >
+              aria-label="Previous photo">
               <ChevronLeft size={20} />
             </button>
             <button
-              onClick={() => goTo(selectedIndex + 1)}
+              onClick={() => goTo(selectedIndex + 1, 1)}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/70 backdrop-blur-sm text-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background/90"
               aria-label="Next photo"
             >
