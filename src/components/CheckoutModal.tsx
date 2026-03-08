@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Product, getProductImage } from '@/data/mockProducts';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
+import { trackEvent } from '@/lib/gtag';
 
 interface CheckoutModalProps {
   product: Product;
@@ -40,6 +41,11 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
     }
 
     setLoading(true);
+    trackEvent('begin_checkout', {
+      currency: 'KES',
+      value: product.price,
+      items: [{ item_id: product.id, item_name: product.title, price: product.price }],
+    });
     try {
       const { data, error } = await supabase.functions.invoke('mpesa-stk-push', {
         body: {
@@ -54,6 +60,12 @@ const CheckoutModal = ({ product, isOpen, onClose }: CheckoutModalProps) => {
       if (error) throw error;
 
       if (data?.success) {
+        trackEvent('purchase', {
+          currency: 'KES',
+          value: product.price,
+          transaction_id: data.checkoutRequestId || product.id,
+          items: [{ item_id: product.id, item_name: product.title, price: product.price }],
+        });
         toast.success('M-Pesa STK Push sent! Check your phone to complete payment.', {
           description: `KES ${product.price.toLocaleString()} for ${product.title}`,
           duration: 10000,
