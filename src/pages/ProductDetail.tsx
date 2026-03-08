@@ -121,9 +121,7 @@ const ProductDetail = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-            <div className="aspect-square rounded-xl overflow-hidden bg-card">
-              <img src={imageUrl} alt={product.title} className="w-full h-full object-cover" />
-            </div>
+            <ProductImageGallery product={product} />
           </motion.div>
 
           <motion.div
