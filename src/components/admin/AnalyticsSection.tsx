@@ -32,14 +32,14 @@ export default function AnalyticsSection() {
 
   const filteredOrders = useMemo(() => {
     const from = startOfDay(dateFrom);
-    const to = startOfDay(subDays(dateTo, -1)); // include the end date
+    const toEnd = startOfDay(subDays(dateTo, -1));
     return orders.filter((o) => {
       const created = new Date(o.created_at);
-      return !isBefore(created, from) && isBefore(created, to);
+      return created >= from && created < toEnd;
     });
   }, [orders, dateFrom, dateTo]);
 
-  const dayCount = differenceInDays(dateTo, dateFrom) + 1;
+  const dayCount = Math.max(1, differenceInDays(dateTo, dateFrom) + 1);
 
   const stats = useMemo(() => {
     const totalRevenue = filteredOrders
