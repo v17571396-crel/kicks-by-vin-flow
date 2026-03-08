@@ -19,6 +19,7 @@ const SEO = ({
   path = '/',
   type = 'website',
   jsonLd,
+  extraJsonLd,
 }: SEOProps) => {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Quality Thrift Shoes Nairobi`;
   const url = `${BASE_URL}${path}`;
