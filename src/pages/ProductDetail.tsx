@@ -60,7 +60,12 @@ const ProductDetail = () => {
           '@type': 'Product',
           name: product.title,
           description: product.description,
-          image: imageUrl,
+          image: product.images?.length ? product.images : [imageUrl],
+          category: product.category,
+          brand: {
+            '@type': 'Brand',
+            name: product.title.split(' ')[0],
+          },
           offers: {
             '@type': 'Offer',
             price: product.price,
@@ -69,6 +74,11 @@ const ProductDetail = () => {
               ? 'https://schema.org/InStock'
               : 'https://schema.org/OutOfStock',
             itemCondition: 'https://schema.org/UsedCondition',
+            seller: {
+              '@type': 'Organization',
+              name: 'KicksbyVin',
+              url: 'https://kicksbyvin.lovable.app',
+            },
           },
         }}
       />
