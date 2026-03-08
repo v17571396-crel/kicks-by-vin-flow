@@ -176,7 +176,7 @@ const ProductDetail = () => {
           </motion.div>
         </div>
 
-        <ProductReviews productId={product.id} />
+        <ProductReviews productId={product.id} productTitle={product.title} />
       </div>
 
       <Footer />

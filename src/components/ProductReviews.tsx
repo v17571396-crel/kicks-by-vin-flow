@@ -9,6 +9,7 @@ import { trackEvent } from '@/lib/gtag';
 
 interface ProductReviewsProps {
   productId: string;
+  productTitle: string;
 }
 
 const StarRating = ({ rating, onRate, interactive = false }: { rating: number; onRate?: (r: number) => void; interactive?: boolean }) => (
@@ -30,7 +31,7 @@ const StarRating = ({ rating, onRate, interactive = false }: { rating: number; o
   </div>
 );
 
-const ProductReviews = ({ productId }: ProductReviewsProps) => {
+const ProductReviews = ({ productId, productTitle }: ProductReviewsProps) => {
   const { user } = useAuth();
   const { reviews, isLoading, addReview, deleteReview, averageRating, userReview } = useReviews(productId);
   const [rating, setRating] = useState(0);
@@ -41,7 +42,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
     e.preventDefault();
     if (rating === 0) return;
     addReview.mutate(
-      { rating, comment, reviewerName: name || 'Anonymous' },
+      { rating, comment, reviewerName: name || 'Anonymous', productTitle },
       {
         onSuccess: () => {
           trackEvent('submit_review', { item_id: productId, rating });

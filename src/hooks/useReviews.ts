@@ -33,7 +33,7 @@ export function useReviews(productId: string | undefined) {
   });
 
   const addReview = useMutation({
-    mutationFn: async ({ rating, comment, reviewerName }: { rating: number; comment: string; reviewerName: string }) => {
+    mutationFn: async ({ rating, comment, reviewerName, productTitle }: { rating: number; comment: string; reviewerName: string; productTitle: string }) => {
       if (!user || !productId) throw new Error('Login required');
       const { error } = await supabase.from('reviews').insert({
         product_id: productId,
@@ -43,10 +43,23 @@ export function useReviews(productId: string | undefined) {
         comment,
       });
       if (error) throw error;
+      return { reviewerName, rating, comment, productTitle };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
+      queryClient.invalidateQueries({ queryKey: ['review-stats'] });
       toast.success('Review submitted!');
+
+      // Send WhatsApp notification to admin
+      const stars = '⭐'.repeat(data.rating);
+      const msg = `📝 New Review — KicksbyVin\n\n` +
+        `👟 ${data.productTitle}\n` +
+        `${stars} (${data.rating}/5)\n` +
+        `👤 ${data.reviewerName}\n` +
+        `💬 ${data.comment || '(no comment)'}\n\n` +
+        `Check the admin dashboard for details.`;
+      const whatsappUrl = `https://wa.me/254111235578?text=${encodeURIComponent(msg)}`;
+      window.open(whatsappUrl, '_blank');
     },
     onError: () => {
       toast.error('Failed to submit review');
