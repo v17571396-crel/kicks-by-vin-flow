@@ -201,6 +201,24 @@ const ProductImageGallery = ({ product }: ProductImageGalleryProps) => {
               </span>
             )}
 
+            {/* Zoom indicator / reset */}
+            <AnimatePresence>
+              {scale > 1 && (
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={(e) => { e.stopPropagation(); resetZoom(); }}
+                  className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-card/80 backdrop-blur-sm text-foreground rounded-full px-4 py-2 text-sm font-medium hover:bg-card/95 transition-colors"
+                  aria-label="Reset zoom"
+                >
+                  <ZoomIn size={16} />
+                  {Math.round(scale * 100)}% — Tap to reset
+                </motion.button>
+              )}
+            </AnimatePresence>
+
             {/* Lightbox image */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.img
