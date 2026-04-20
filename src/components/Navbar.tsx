@@ -75,7 +75,7 @@ const Navbar = () => {
                 About
               </Link>
               <a
-                href="https://wa.me/254700000000?text=Hey%20KicksbyVin!%20I%20have%20a%20question"
+                href="https://wa.me/254751687034?text=Hey%20KicksbyVin!%20I%20have%20a%20question"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-body text-base font-medium text-foreground py-2"
