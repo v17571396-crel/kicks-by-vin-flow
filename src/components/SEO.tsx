@@ -11,7 +11,7 @@ interface SEOProps {
 }
 
 const SITE_NAME = 'KicksbyVin';
-const BASE_URL = 'https://kicksbyvin.lovable.app';
+const BASE_URL = 'https://kicksbyvin.netlify.app';
 const DEFAULT_IMAGE = `${BASE_URL}/og-image.png`;
 
 const SEO = ({
