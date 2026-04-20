@@ -51,7 +51,7 @@ const ProductReviews = ({ productId, productTitle }: ProductReviewsProps) => {
       `👤 ${reviewerName}\n` +
       `💬 ${comment || '(no comment)'}\n\n` +
       `Check the admin dashboard for details.`;
-    const whatsappUrl = `https://wa.me/254111235578?text=${encodeURIComponent(msg)}`;
+    const whatsappUrl = `https://wa.me/254751687034?text=${encodeURIComponent(msg)}`;
     const whatsappWindow = window.open(whatsappUrl, '_blank');
 
     addReview.mutate(
