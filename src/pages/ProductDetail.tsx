@@ -48,7 +48,7 @@ const ProductDetail = () => {
 
   const imageUrl = getProductImage(product);
 
-  const whatsappUrl = `https://wa.me/254700000000?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/254751687034?text=${encodeURIComponent(
     `Hey KicksbyVin! I'm interested in: ${product.title} (${product.size}) - KES ${product.price.toLocaleString()}. Can I get more photos?`
   )}`;
 
