@@ -27,7 +27,7 @@ const Navbar = () => {
             About
           </Link>
           <a
-            href="https://wa.me/254700000000?text=Hey%20KicksbyVin!%20I%20have%20a%20question"
+            href="https://wa.me/254751687034?text=Hey%20KicksbyVin!%20I%20have%20a%20question"
             target="_blank"
             rel="noopener noreferrer"
             className="font-body text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
