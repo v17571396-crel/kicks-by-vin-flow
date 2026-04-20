@@ -15,7 +15,7 @@ const Footer = () => {
             <h4 className="font-display font-semibold mb-3">Quick Links</h4>
             <ul className="space-y-2 font-body text-sm opacity-80">
               <li><a href="/" className="hover:opacity-100 transition-opacity">Shop All</a></li>
-              <li><a href="https://wa.me/254700000000" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">WhatsApp Us</a></li>
+              <li><a href="https://wa.me/254751687034" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">WhatsApp Us</a></li>
               <li><a href="https://instagram.com/kicksbyvin" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">Instagram</a></li>
             </ul>
           </div>
