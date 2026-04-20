@@ -9,7 +9,7 @@ const WhatsAppButton = ({ productTitle }: WhatsAppButtonProps) => {
     ? `Hey KicksbyVin! I'm interested in: ${productTitle}. Can I get more photos?`
     : `Hey KicksbyVin! I have a question about your shoes.`;
 
-  const url = `https://wa.me/254111235578?text=${encodeURIComponent(message)}`;
+  const url = `https://wa.me/254751687034?text=${encodeURIComponent(message)}`;
 
   return (
     <a
